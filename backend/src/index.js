@@ -55,6 +55,9 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Health check endpoint for Render/Cron jobs
+app.get('/health', (req, res) => res.status(200).send('OK'));
+
 // Route files
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
