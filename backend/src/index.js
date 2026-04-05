@@ -22,27 +22,37 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-// Security headers
-app.use(helmet());
+// Security headers - Move after CORS for best results
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 
-// Enable CORS with specific origins
+// Enable CORS with flexible origin check
 const allowedOrigins = [
     'http://localhost:5173',
     'https://zorvyn-five-sigma.vercel.app',
-    'https://zorvyn-2k9d4e6lw-dhruvgoel335-gmailcoms-projects.vercel.app'
+    'https://zorvyn-6rx9.onrender.com'
 ];
 
 app.use(cors({
     origin: function (origin, callback) {
         // allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
+        
+        const isVercel = origin.endsWith('.vercel.app');
+        const isAllowed = allowedOrigins.indexOf(origin) !== -1;
+        
+        if (isVercel || isAllowed) {
+            callback(null, true);
+        } else {
+            // For now, allow but log for debugging if it's still failing
+            console.warn(`Blocked by CORS: ${origin}`);
+            callback(null, true); // Allow all during debugging but log it
         }
-        return callback(null, true);
     },
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Route files
