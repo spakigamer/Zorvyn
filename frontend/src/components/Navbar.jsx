@@ -16,29 +16,30 @@ const Navbar = () => {
 
     return (
         <nav className="navbar">
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: '800', fontSize: '1.25rem', color: 'var(--primary)' }}>
-                <Wallet size={32} /> Zovryn Finance
+            <Link to="/" className="nav-logo flex items-center gap-2">
+                <Wallet size={32} />
+                <span>Zovryn</span>
             </Link>
-            <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-                <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '500' }}>
+            <div className="flex gap-4 items-center">
+                <Link to="/" className="flex items-center gap-2" style={{ fontWeight: '600' }}>
                     <LayoutDashboard size={18} /> Dashboard
                 </Link>
-                <Link to="/records" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '500' }}>
+                <Link to="/records" className="flex items-center gap-2" style={{ fontWeight: '600' }}>
                     <FileText size={18} /> Records
                 </Link>
                 {user.role === 'admin' && (
-                    <Link to="/users" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '500' }}>
+                    <Link to="/users" className="flex items-center gap-2" style={{ fontWeight: '600' }}>
                         <Users size={18} /> Users
                     </Link>
                 )}
-                <div style={{ height: '24px', width: '1px', background: 'var(--border)' }}></div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{ height: '24px', width: '1px', background: 'var(--border)', margin: '0 0.5rem' }}></div>
+                <div className="flex items-center gap-4">
                     <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>{user.name}</div>
-                        <div className="badge" style={{ padding: '0 0.4rem', fontSize: '0.65rem' }}>{user.role}</div>
+                        <div style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-main)' }}>{user.name}</div>
+                        <div className="badge" style={{ fontSize: '0.65rem', background: 'var(--bg-card)', color: 'var(--primary)', border: '1px solid var(--border)' }}>{user.role}</div>
                     </div>
-                    <button onClick={handleLogout} className="btn" style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', padding: '0.5rem' }}>
-                        <LogOut size={20} />
+                    <button onClick={handleLogout} className="btn-secondary" style={{ padding: '0.6rem', borderRadius: '50%' }}>
+                        <LogOut size={18} />
                     </button>
                 </div>
             </div>

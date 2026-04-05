@@ -22,8 +22,19 @@ exports.getRecords = async (req, res, next) => {
         // Create operators ($gt, $gte, etc)
         queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
+        // Create query object
+        const finalQuery = JSON.parse(queryStr);
+        
+        // Handle regex search for category
+        if (req.query.category) {
+            finalQuery.category = { $regex: req.query.category, $options: 'i' };
+        }
+
         // Finding resource
-        query = Record.find(JSON.parse(queryStr));
+        query = Record.find(finalQuery).populate({
+            path: 'createdBy',
+            select: 'name email role'
+        });
 
         // Note: For Viewer and Analyst, they can see all records, or maybe only their own?
         // Usually in finance dashboards, Analysts/Admins see all records.
@@ -50,7 +61,7 @@ exports.getRecords = async (req, res, next) => {
         const limit = parseInt(req.query.limit, 10) || 10;
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
-        const total = await Record.countDocuments(JSON.parse(queryStr));
+        const total = await Record.countDocuments(finalQuery);
 
         query = query.skip(startIndex).limit(limit);
 
@@ -76,6 +87,7 @@ exports.getRecords = async (req, res, next) => {
 
         res.status(200).json({
             success: true,
+            total,
             count: records.length,
             pagination,
             data: records

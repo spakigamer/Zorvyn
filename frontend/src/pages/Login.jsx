@@ -21,25 +21,36 @@ const Login = () => {
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 100px)' }}>
-      <div className="glass-card animate-fade-in" style={{ width: '400px' }}>
-        <h2 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <LogIn size={24} color="var(--primary)" /> Login
-        </h2>
-        {error && <p style={{ color: 'var(--danger)', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</p>}
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 150px)', padding: '2rem' }}>
+      <div className="glass-card animate-fade-in" style={{ width: '100%', maxWidth: '420px', border: '1px solid var(--primary-glow)' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <div className="nav-logo" style={{ fontSize: '2.5rem', marginBottom: '0.5rem', display: 'inline-block' }}>Zovryn</div>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: '800', letterSpacing: '-0.5px' }}>Welcome Back</h2>
+          <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem' }}>Please enter your credentials to access your dashboard.</p>
+        </div>
+
+        {error && (
+          <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', color: 'var(--danger)', padding: '1rem', borderRadius: '12px', marginBottom: '1.5rem', fontSize: '0.85rem', textAlign: 'center' }}>
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label>Email Address</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <div className="mb-2">
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', fontWeight: '600', color: 'var(--text-muted)' }}>Email Address</label>
+            <input type="email" placeholder="name@company.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
-          <div className="input-group">
-            <label>Password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <div className="mb-4">
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', fontWeight: '600', color: 'var(--text-muted)' }}>Password</label>
+            <input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
-          <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Login Account</button>
+          <button type="submit" className="btn-primary" style={{ width: '100%', padding: '1rem' }}>
+            <LogIn size={18} /> Sign In
+          </button>
         </form>
-        <p style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-          Don't have an account? <Link to="/register" style={{ color: 'var(--primary)', fontWeight: '600' }}>Register here</Link>
+
+        <p style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-dim)' }}>
+          New to the platform? <Link to="/register" style={{ color: 'var(--primary)', fontWeight: '700', textDecoration: 'underline' }}>Create an account</Link>
         </p>
       </div>
     </div>

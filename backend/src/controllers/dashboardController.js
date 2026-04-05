@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Record = require('../models/Record');
 
 // @desc    Get dashboard summary
@@ -5,7 +6,13 @@ const Record = require('../models/Record');
 // @access  Private/Admin/Analyst
 exports.getSummary = async (req, res, next) => {
     try {
+        const match = {};
+        if (req.query.userId && mongoose.Types.ObjectId.isValid(req.query.userId)) {
+            match.createdBy = new mongoose.Types.ObjectId(req.query.userId);
+        }
+
         const summary = await Record.aggregate([
+            { $match: match },
             {
                 $group: {
                     _id: '$type',
@@ -43,7 +50,13 @@ exports.getSummary = async (req, res, next) => {
 // @access  Private/Admin/Analyst
 exports.getTrends = async (req, res, next) => {
     try {
+        const match = {};
+        if (req.query.userId && mongoose.Types.ObjectId.isValid(req.query.userId)) {
+            match.createdBy = new mongoose.Types.ObjectId(req.query.userId);
+        }
+
         const trends = await Record.aggregate([
+            { $match: match },
             {
                 $group: {
                     _id: {
@@ -62,6 +75,36 @@ exports.getTrends = async (req, res, next) => {
         res.status(200).json({
             success: true,
             data: trends
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+// @desc    Get category breakdown
+// @route   GET /api/dashboard/categories
+// @access  Private/Admin/Analyst/Viewer
+exports.getCategories = async (req, res, next) => {
+    try {
+        const match = {};
+        if (req.query.userId && mongoose.Types.ObjectId.isValid(req.query.userId)) {
+            match.createdBy = new mongoose.Types.ObjectId(req.query.userId);
+        }
+
+        const categories = await Record.aggregate([
+            { $match: match },
+            {
+                $group: {
+                    _id: { category: '$category', type: '$type' },
+                    totalAmount: { $sum: '$amount' }
+                }
+            },
+            { $sort: { totalAmount: -1 } }
+        ]);
+
+        res.status(200).json({
+            success: true,
+            data: categories
         });
     } catch (err) {
         next(err);
